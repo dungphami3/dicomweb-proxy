@@ -1,25 +1,25 @@
 {
   "source": {
-    "aet": "DICOMWEB_PROXY",
+    "aet": "TRAINING_LOCAL",
     "ip": "127.0.0.1",
-    "port": 8888
+    "port": 4334
   },
 
   "peers": [
     {
-      "aet": "CONQUESTSRV1",
+      "aet": "ORTHANC",
       "ip": "127.0.0.1",
-      "port": 5678
+      "port": 4242
     }
   ],
-  "transferSyntax": "1.2.840.10008.1.2.4.80",
+  "transferSyntax": "1.2.840.10008.1.2.1",
   "mimeType": "image/dicom+jpeg",
-  "lossyQuality": 60,
+  "lossyQuality": 0,
   "logDir": "./logs",
   "storagePath": "./data",
-  "cacheRetentionMinutes": 60,
+  "cacheRetentionMinutes": 5,
   "webserverPort": 5000,
-  "useCget": true,
+  "useCget": false,
   "useFetchLevel": "SERIES",
   "maxAssociations": 4,
   "qidoMinChars": 0,

@@ -1,12 +1,13 @@
 {
   "name": "dicomweb-proxy",
-  "version": "1.9.3",
+  "version": "1.9.2",
   "description": "A proxy to translate between dicomweb and dimse",
   "bin": "./build/app.js",
   "scripts": {
     "start": "ts-node src/app.ts",
     "format": "npx prettier ./src",
     "build": "tsc --p ./src/tsconfig.json",
+	"postbuild": "copy package.json build && copy package-lock.json build && cd build && npm install",
     "pkg:win": "npm run build && npx pkg --targets node16-win-x64 package.json"
   },
   "repository": {
@@ -60,7 +61,9 @@
   "pkg": {
     "assets": [
       "./config/default.json",
-      "./node_modules/dicom-dimse-native/build/Release/dcmtk.node"
+      "./node_modules/dicom-dimse-native/build/Release/dcmtk.node",
+	  "./node_modules/axios/**",
+	  "./node_modules/tiny-lru/dist/tiny-lru.cjs"
     ]
   }
 }

@@ -28,7 +28,6 @@ export async function fetchMeta(query: IQueryParams, studyInstanceUID: string, s
     if (!fullMeta) {
       return json;
     }
-
     // check if fetch is needed
     for (const [key] of Object.entries(json)) {
       const sopInstanceUid = json[key]['00080018'].Value[0];

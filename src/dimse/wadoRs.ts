@@ -269,7 +269,7 @@ export async function doWadoRs({ studyInstanceUid, seriesInstanceUid, sopInstanc
       type = 'application/octet-stream';
     }
 
-    const contentType = `multipart/related;type='${type}';boundary=${boundary}`;
+    const contentType = `multipart/related;type='${type};boundary=${boundary}`;
     return Promise.resolve({
       contentType,
       buffer: Buffer.concat(buffArray),

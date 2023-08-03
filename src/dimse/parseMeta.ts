@@ -22,6 +22,7 @@ function parseFile(filename: string): Promise<ElementType> {
 
       fs.promises.readFile(filename).then((data: Uint8Array) => {
         const dataset = dicomParser.parseDicom(data);
+        console.log(dataset);
 
         // parse additional needed attributes
         const patientName = dataset.string('x00100010');
@@ -43,6 +44,13 @@ function parseFile(filename: string): Promise<ElementType> {
         const modality = dataset.string('x00080060');
         const samplesPerPixel = dataset.uint16('x00280002');
         const photometricInterpretation = dataset.string('x00280004');
+
+        const numberofframes = dataset.intString("x00280008");
+        const frameIncrement = dataset.attributeTag("x00280009") ;
+        const transferSyntax = dataset.string("x00020010");
+        const pg = dataset.uint16("x00280006");
+        // const incrementAT = dataset.string("x52009230");
+        // console.log(incrementAT);
         const pixelRepresentation = dataset.uint16('x00280103');
         const windowCenter = dataset.string('x00281050');
         const wc = windowCenter ? parseFloat(windowCenter.split('\\')[0]) : 40;
@@ -57,10 +65,13 @@ function parseFile(filename: string): Promise<ElementType> {
         const instanceNumber = dataset.string('x00200013');
         const sliceThickness = dataset.string('x00180050');
         const sliceLocation = dataset.string('x00201041');
-
+        const EncapsulatedDocument = dataset.elements["x00420011"];
+        console.log(EncapsulatedDocument);
+         var pdfByteArray = Buffer.from(dataset.byteArray.buffer, EncapsulatedDocument.dataOffset, EncapsulatedDocument.dataOffset+EncapsulatedDocument.length);
         // append to all results
         const result: ElementType = {
           '00100010': { Value: [{ Alphabetic: patientName }], vr: 'PN' },
+          '00020010':{Value:[transferSyntax], vr: "UI"},
           '00100020': { Value: [patentID], vr: 'LO' },
           '0020000D': { Value: [studyInstanceUID], vr: 'UI' },
           '00080020': { Value: [studyDate], vr: 'DA' },
@@ -79,8 +90,8 @@ function parseFile(filename: string): Promise<ElementType> {
           '00280101': { Value: [bitsStored], vr: 'US' },
           '00280102': { Value: [highBit], vr: 'US' },
           '00280103': { Value: [pixelRepresentation], vr: 'US' },
-          '00281050': { Value: [wc], vr: 'DS' },
-          '00281051': { Value: [ww], vr: 'DS' },
+          // '00281050': { Value: [wc], vr: 'DS' },
+          // '00281051': { Value: [ww], vr: 'DS' },
           '00281052': { Value: [rescaleIntercept], vr: 'DS' },
           '00281053': { Value: [rescaleSlope], vr: 'DS' },
           ...(iop && { '00200037': { Value: iop, vr: 'DS' } }),
@@ -88,8 +99,21 @@ function parseFile(filename: string): Promise<ElementType> {
           '00200013': { Value: [instanceNumber], vr: 'IS' },
           '00180050': { Value: [sliceThickness], vr: 'DS' },
           '00201041': { Value: [sliceLocation], vr: 'DS' },
+          '00280008': {Value: [numberofframes], vr: "IS"},
+          '00280006': {Value: [pg], vr: "US"},
+          '00420011': {Value: [{
+            InlineBinary: pdfByteArray.toString("base64"),
+          }], vr: "OB"}
         };
-        resolve(result);
+
+        var r = {};
+        Object.keys(result).forEach(k=>{
+          if(result[k].Value[0] != null){
+              r[k] = result[k];
+          }
+        });
+
+        resolve(r);
       });
     });
   });

@@ -9,7 +9,6 @@ export const studyLevelTags: Array<string> = [
   '00080056',
   '00080061',
   '00080090',
-  '00081190',
   '00100010',
   '00100020',
   '00100030',
@@ -26,10 +25,11 @@ export const seriesLevelTags: Array<string> = [
   '00080056',
   '00080060',
   '0008103E',
-  '00081190',
   '0020000E',
   '00200011',
   '00201209',
+  '00280006',
+  '00280008',
 ];
 
 export const imageLevelTags: Array<string> = ['00080016', '00080018'];

@@ -41,11 +41,12 @@ export async function fetchMove(studyUid: string, seriesUid: string, imageUid: s
     });
   }
   const uidPath = queryLevelToPath(studyUid, seriesUid, imageUid, level);
-
+  
   return new Promise((resolve, reject) => {
     try {
       logger.info(`fetch start: ${uidPath}`);
       moveScu(moveOptions, (result: string) => {
+        logger.info(`fetch start: ${uidPath}`);
         if (result && result.length > 0) {
           try {
             const json = JSON.parse(result);
